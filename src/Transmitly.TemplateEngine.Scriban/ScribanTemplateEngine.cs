@@ -22,18 +22,18 @@ namespace Transmitly.TemplateEngine.Scriban
 	{
 		private readonly ScribanOptions _options = Guard.AgainstNull(options);
 
-		public async Task<string?> RenderAsync(IContentTemplateRegistration? registration, IContentModel? contentModel)
+		public async Task<string?> RenderAsync(IContentTemplateRegistration? registration, IDispatchCommunicationContext context)
 		{
-			if (registration == null || contentModel == null)
+			if (registration == null || context.ContentModel == null)
 				return null;
-			var source = await registration.GetContentAsync();
+			var source = await registration.GetContentAsync(context);
 			var template = Parse(source);
 			if (template.HasErrors)
 			{
 				System.Diagnostics.Debug.WriteLine($"{nameof(ScribanTemplateEngine)} {string.Join(";", template.Messages)}");
 				return null;
 			}
-			var result = await template.EvaluateAsync(contentModel.Model, _options.MemberRenamer, _options.MemberFilterDelegate);
+			var result = await template.EvaluateAsync(context.ContentModel.Model, _options.MemberRenamer, _options.MemberFilterDelegate);
 			return result?.ToString();
 		}
 
