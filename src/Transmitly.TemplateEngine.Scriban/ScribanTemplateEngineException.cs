@@ -12,19 +12,22 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-using SB = Scriban;
+using System;
+using System.Runtime.Serialization;
+
 namespace Transmitly.TemplateEngine.Scriban
 {
-	public sealed class ScribanOptions
+	[Serializable]
+	public class ScribanTemplateEngineException : Exception
 	{
-		/// <summary>
-		/// Whether to force the use of the Liquid template parser. (Default=false)
-		/// </summary>
-		public bool UseLiquidTemplates { get; set; }
-		public bool ThrowIfTemplateError { get; set; } = true;
-		public SB.Parsing.LexerOptions? LexerOptions { get; set; }
-		public SB.Parsing.ParserOptions ParserOptions { get; set; }
-		public SB.Runtime.MemberRenamerDelegate? MemberRenamer { get; set; }
-		public SB.Runtime.MemberFilterDelegate? MemberFilterDelegate { get; set; }
+		public ScribanTemplateEngineException(string message) : base(message)
+		{
+
+		}
+
+		protected ScribanTemplateEngineException(SerializationInfo info, StreamingContext context) : base(info, context)
+		{
+			
+		}
 	}
 }

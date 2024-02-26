@@ -5,6 +5,8 @@ VisualStudioVersion = 17.9.34518.117
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Transmitly.TemplateEngine.Scriban", "src\Transmitly.TemplateEngine.Scriban\Transmitly.TemplateEngine.Scriban.csproj", "{D5F3C43E-5205-4D73-813B-FA8329F352BA}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Transmitly.TemplateEngine.Scriban.Tests", "tests\Transmitly.TemplateEngine.Scriban.Tests\Transmitly.TemplateEngine.Scriban.Tests.csproj", "{397E758E-F0B5-4E98-9ED0-0E874B657DEE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{D5F3C43E-5205-4D73-813B-FA8329F352BA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D5F3C43E-5205-4D73-813B-FA8329F352BA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D5F3C43E-5205-4D73-813B-FA8329F352BA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{397E758E-F0B5-4E98-9ED0-0E874B657DEE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{397E758E-F0B5-4E98-9ED0-0E874B657DEE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{397E758E-F0B5-4E98-9ED0-0E874B657DEE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{397E758E-F0B5-4E98-9ED0-0E874B657DEE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

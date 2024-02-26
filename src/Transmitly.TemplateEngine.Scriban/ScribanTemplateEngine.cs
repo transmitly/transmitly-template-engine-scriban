@@ -12,6 +12,8 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
+using System;
+using System.Runtime.Serialization;
 using System.Threading.Tasks;
 using Transmitly.Template.Configuration;
 using SB = Scriban;
@@ -24,16 +26,24 @@ namespace Transmitly.TemplateEngine.Scriban
 
 		public async Task<string?> RenderAsync(IContentTemplateRegistration? registration, IDispatchCommunicationContext context)
 		{
-			if (registration == null || context.ContentModel == null)
+			if (registration == null)
 				return null;
+
+			var model = context.ContentModel?.Model;
+
 			var source = await registration.GetContentAsync(context);
 			var template = Parse(source);
 			if (template.HasErrors)
 			{
-				System.Diagnostics.Debug.WriteLine($"{nameof(ScribanTemplateEngine)} {string.Join(";", template.Messages)}");
+				var messages = string.Join(Environment.NewLine, template.Messages);
+				if (options.ThrowIfTemplateError)
+				{
+					throw new ScribanTemplateEngineException($"Provided template has errors. Pipeline: '{context.PipelineName}'.{Environment.NewLine}{messages}");
+				}
+				System.Diagnostics.Debug.WriteLine($"{nameof(ScribanTemplateEngine)} {string.Join(";", messages)}");
 				return null;
 			}
-			var result = await template.EvaluateAsync(context.ContentModel.Model, _options.MemberRenamer, _options.MemberFilterDelegate);
+			var result = await template.RenderAsync(model, _options.MemberRenamer, _options.MemberFilterDelegate);
 			return result?.ToString();
 		}
 
