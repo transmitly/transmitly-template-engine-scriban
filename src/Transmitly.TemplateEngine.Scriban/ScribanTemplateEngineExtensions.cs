@@ -21,13 +21,13 @@ namespace Transmitly
 	public static class ScribanTemplateEngineExtensions
 	{
 		private const string ScribanId = "Scriban";
-		private const string DefaultProviderId = "Default";
 
-		public static string Scriban(this TemplateEngines templateEngines, string? providerId = DefaultProviderId)
+
+		public static string Scriban(this TemplateEngines templateEngines, string? providerId = null)
 		{
 			Guard.AgainstNull(templateEngines);
 
-			return $"{ScribanId}.{(!string.IsNullOrWhiteSpace(providerId) ? providerId : DefaultProviderId)}";
+			return templateEngines.GetId(ScribanId, providerId);
 		}
 
 		public static CommunicationsClientBuilder AddScribanTemplateEngine(this TemplateConfigurationBuilder templateConfiguration, Action<ScribanOptions> options, string? templateEngineId = null)
