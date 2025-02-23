@@ -33,7 +33,7 @@
   </ItemGroup>
 	<ItemGroup>
 		<PackageReference Include="Scriban" Version="5.9.1" />
-		<PackageReference Include="Transmitly" Version="0.1.0" />
+		<PackageReference Include="Transmitly" Version="0.1.0-229.bd2c7be" />
 	</ItemGroup>
 	<ItemGroup>
 		<AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
