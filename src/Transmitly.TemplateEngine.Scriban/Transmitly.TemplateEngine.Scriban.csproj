@@ -1,8 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-	  <TargetFrameworks Condition=" '$(OS)' == 'Windows_NT'">net48;net471</TargetFrameworks>
-	  <TargetFrameworks>$(TargetFrameworks);netstandard2.0;net6.0</TargetFrameworks>
+	  <TargetFrameworks Condition=" '$(OS)' == 'Windows_NT'">net48;net472</TargetFrameworks>
+	  <TargetFrameworks>$(TargetFrameworks);netstandard2.0;net6.0;net8.0</TargetFrameworks>
 	  <LangVersion>latest</LangVersion>
 	  <Nullable>enable</Nullable>
 	  <AssemblyVersion>0.0.1</AssemblyVersion>
@@ -32,8 +32,8 @@
     </None>
   </ItemGroup>
 	<ItemGroup>
-		<PackageReference Include="Scriban" Version="5.9.1" />
-		<PackageReference Include="Transmitly" Version="0.1.0-229.bd2c7be" />
+		<PackageReference Include="Scriban" Version="5.12.1" />
+		<PackageReference Include="Transmitly" Version="0.1.0-237.43aee1a" />
 	</ItemGroup>
 	<ItemGroup>
 		<AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
@@ -41,8 +41,8 @@
 		</AssemblyAttribute>
 	</ItemGroup>
 	<ItemGroup>
-		<PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All" />
-		<PackageReference Include="PolySharp" Version="1.14.1" PrivateAssets="All" />
+		<PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All" />
+		<PackageReference Include="PolySharp" Version="1.15.0" PrivateAssets="All" />
 	</ItemGroup>
 	<ItemGroup Condition="'$(TargetFrameworkIdentifier)' == '.NETFramework'">
 		<Reference Include="System.Net.Http" />
