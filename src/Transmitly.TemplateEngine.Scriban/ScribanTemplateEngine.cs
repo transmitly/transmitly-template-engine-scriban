@@ -19,39 +19,39 @@ using SB = Scriban;
 
 namespace Transmitly.TemplateEngine.Scriban
 {
-    internal sealed class ScribanTemplateEngine(ScribanOptions options) : ITemplateEngine
-    {
-        private readonly ScribanOptions _options = Guard.AgainstNull(options);
+	internal sealed class ScribanTemplateEngine(ScribanOptions options) : ITemplateEngine
+	{
+		private readonly ScribanOptions _options = Guard.AgainstNull(options);
 
-        public async Task<string?> RenderAsync(IContentTemplateRegistration? registration, IDispatchCommunicationContext context)
-        {
-            if (registration == null)
-                return null;
+		public async Task<string?> RenderAsync(IContentTemplateRegistration? registration, IDispatchCommunicationContext context)
+		{
+			if (registration == null)
+				return null;
 
-            var model = context.ContentModel?.Model;
+			var model = context.ContentModel?.Model;
 
-            var source = await registration.GetContentAsync(context);
-            var template = Parse(source);
-            if (template.HasErrors)
-            {
-                var messages = string.Join(Environment.NewLine, template.Messages);
-                if (options.ThrowIfTemplateError)
-                {
-                    throw new ScribanTemplateEngineException($"Provided template has errors. Pipeline: '{context.PipelineName}'.{Environment.NewLine}{messages}");
-                }
-                System.Diagnostics.Debug.WriteLine($"{nameof(ScribanTemplateEngine)} {string.Join(";", messages)}");
-                return null;
-            }
-            var result = await template.RenderAsync(model, _options.MemberRenamer, _options.MemberFilterDelegate);
-            return result?.ToString();
-        }
+			var source = await registration.GetContentAsync(context);
+			var template = Parse(source);
+			if (template.HasErrors)
+			{
+				var messages = string.Join(Environment.NewLine, template.Messages);
+				if (options.ThrowIfTemplateError)
+				{
+					throw new ScribanTemplateEngineException($"Provided template has errors. Pipeline: '{context.PipelineName}'.{Environment.NewLine}{messages}");
+				}
+				System.Diagnostics.Debug.WriteLine($"{nameof(ScribanTemplateEngine)} {string.Join(";", messages)}");
+				return null;
+			}
+			var result = await template.RenderAsync(model, _options.MemberRenamer, _options.MemberFilterDelegate);
+			return result?.ToString();
+		}
 
-        private SB.Template Parse(string? content)
-        {
-            if (_options.UseLiquidTemplates)
-                return SB.Template.ParseLiquid(content, parserOptions: _options.ParserOptions, lexerOptions: _options.LexerOptions);
-            return SB.Template.Parse(content, parserOptions: _options.ParserOptions, lexerOptions: _options.LexerOptions);
-        }
+		private SB.Template Parse(string? content)
+		{
+			if (_options.UseLiquidTemplates)
+				return SB.Template.ParseLiquid(content, parserOptions: _options.ParserOptions, lexerOptions: _options.LexerOptions);
+			return SB.Template.Parse(content, parserOptions: _options.ParserOptions, lexerOptions: _options.LexerOptions);
+		}
 
-    }
+	}
 }

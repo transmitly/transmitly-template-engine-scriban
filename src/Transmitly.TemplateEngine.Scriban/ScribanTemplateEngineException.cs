@@ -27,7 +27,7 @@ namespace Transmitly.TemplateEngine.Scriban
 
 		protected ScribanTemplateEngineException(SerializationInfo info, StreamingContext context) : base(info, context)
 		{
-			
+
 		}
 	}
 }
