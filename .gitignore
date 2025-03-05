@@ -156,6 +156,7 @@ _NCrunch_*
 .*crunch*.local.xml
 nCrunchTemp_*
 *.ncrunchsolution
+.NCrunch*
 
 # MightyMoose
 *.mm.*
