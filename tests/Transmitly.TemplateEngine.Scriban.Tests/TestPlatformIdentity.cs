@@ -16,14 +16,14 @@ namespace Transmitly.TemplateEngine.Scriban.Tests
 {
 	public partial class TemplateEngineTests
 	{
-		class TestPlatformIdentity : IPlatformIdentity
+		class TestPlatformIdentity : IPlatformIdentityProfile
 		{
 			public string? Id { get; set; }
 			public string? Name { get; set; }
 			public string? Type { get; set; }
-			public IReadOnlyCollection<IIdentityAddress> Addresses { get; set; }
+			public IReadOnlyCollection<IIdentityAddress> Addresses { get; set; } = [];
 
-			public IReadOnlyCollection<string> ChannelPreferences { get; set; } = [];
+			public IReadOnlyCollection<IChannelPreference>? ChannelPreferences { get; set; }
 		}
 
 	}

@@ -30,7 +30,7 @@ namespace Transmitly.TemplateEngine.Scriban.Tests
 			//var model = new Mock<IContentModel>();
 			var x = typeof(IContentModel).Assembly.GetTypes().Where(t => t.Name == "ContentModel");
 			var tm = TransactionModel.Create(new { name = "World" });
-			var instance = Guard.AgainstNull((IContentModel?)Activator.CreateInstance(x.First(), tm, Array.Empty<IPlatformIdentity>()));
+			var instance = Guard.AgainstNull((IContentModel?)Activator.CreateInstance(x.First(), tm, Array.Empty<IPlatformIdentityProfile>()));
 
 			var context = new Mock<IDispatchCommunicationContext>();
 			context.Setup(s => s.ContentModel).Returns(instance);
@@ -99,31 +99,5 @@ namespace Transmitly.TemplateEngine.Scriban.Tests
 
 			Assert.IsNull(result);
 		}
-
-		//[TestMethod]
-		//public async Task CanHandleAudienceLists()
-		//{
-		//	var expected = "Hello World!";
-		//	var templateContent = "Hello {{aud.Name}}!";
-		//	var template = new Mock<IContentTemplateRegistration>();
-		//	template.Setup(s => s.GetContentAsync(It.IsAny<IDispatchCommunicationContext>())).Returns(Task.FromResult<string?>(templateContent));
-
-		//	var tm = TransactionModel.Create(new { name = "Not World" });
-
-		//	var identity = new TestPlatformIdentity() { Name = "World" };
-
-		//	var contentModelType = typeof(IContentModel).Assembly.GetTypes().Where(t => t.Name == "ContentModel").First();
-		//	var cm = (IContentModel?)Activator.CreateInstance(contentModelType, tm, new List<IPlatformIdentity> { identity });
-
-		//	var context = new Mock<IDispatchCommunicationContext>();
-		//	context.Setup(s => s.ContentModel).Returns(cm);
-		//	var engine = new ScribanTemplateEngine(new ScribanOptions { ThrowIfTemplateError = true });
-
-		//	var result = await engine.RenderAsync(template.Object, context.Object);
-
-		//	Assert.IsNotNull(result);
-		//	Assert.AreEqual(expected, result);
-		//}
-
 	}
 }
