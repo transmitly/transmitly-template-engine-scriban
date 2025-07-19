@@ -18,7 +18,7 @@ using System.Runtime.Serialization;
 namespace Transmitly.TemplateEngine.Scriban
 {
 	[Serializable]
-	public class ScribanTemplateEngineException : Exception
+	public sealed class ScribanTemplateEngineException : Exception
 	{
 		public ScribanTemplateEngineException(string message) : base(message)
 		{

@@ -15,6 +15,7 @@
 using System;
 using System.Threading.Tasks;
 using Transmitly.Template.Configuration;
+using Transmitly.Util;
 using SB = Scriban;
 
 namespace Transmitly.TemplateEngine.Scriban
@@ -37,7 +38,7 @@ namespace Transmitly.TemplateEngine.Scriban
 				var messages = string.Join(Environment.NewLine, template.Messages);
 				if (options.ThrowIfTemplateError)
 				{
-					throw new ScribanTemplateEngineException($"Provided template has errors. Pipeline: '{context.PipelineName}'.{Environment.NewLine}{messages}");
+					throw new ScribanTemplateEngineException($"Provided template has errors. Pipeline: '{context.PipelineIntent}'.{Environment.NewLine}{messages}");
 				}
 				System.Diagnostics.Debug.WriteLine($"{nameof(ScribanTemplateEngine)} {string.Join(";", messages)}");
 				return null;

@@ -2,7 +2,7 @@
 
   <PropertyGroup>
 	  <TargetFrameworks Condition=" '$(OS)' == 'Windows_NT'">net48;net472</TargetFrameworks>
-	  <TargetFrameworks>$(TargetFrameworks);netstandard2.0;net6.0;net8.0</TargetFrameworks>
+	  <TargetFrameworks>$(TargetFrameworks);net9.0;net8.0;net6.0;netstandard2.0</TargetFrameworks>
 	  <LangVersion>latest</LangVersion>
 	  <Nullable>enable</Nullable>
 	  <AssemblyVersion>0.0.1</AssemblyVersion>
@@ -13,7 +13,7 @@
 	  <Company>Code Impressions</Company>
 	  <Title>Transmit.ly Scriban Template Engine</Title>
 	  <Description>A template engine for the Transmitly communications library.</Description>
-	  <Copyright>Copyright © (c) Code Impressions, LLC</Copyright>
+	  <Copyright>Copyright (c) Code Impressions, LLC</Copyright>
 	  <Authors>Code Impressions</Authors>
 	  <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
 	  <PackageIcon>icon-dark.png</PackageIcon>
@@ -32,10 +32,6 @@
     </None>
   </ItemGroup>
 	<ItemGroup>
-		<PackageReference Include="Scriban" Version="5.12.1" />
-		<PackageReference Include="Transmitly" Version="0.1.0-271.a05261c" />
-	</ItemGroup>
-	<ItemGroup>
 		<AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
 			<_Parameter1>$(MSBuildProjectName).Tests</_Parameter1>
 		</AssemblyAttribute>
@@ -43,6 +39,8 @@
 	<ItemGroup>
 		<PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All" />
 		<PackageReference Include="PolySharp" Version="1.15.0" PrivateAssets="All" />
+		<PackageReference Include="Scriban" Version="5.12.1" />
+		<PackageReference Include="Transmitly" Version="0.1.0-271.a05261c" />
 	</ItemGroup>
 	<ItemGroup Condition="'$(TargetFrameworkIdentifier)' == '.NETFramework'">
 		<Reference Include="System.Net.Http" />

@@ -15,6 +15,7 @@
 using System;
 using Transmitly.Template.Configuration;
 using Transmitly.TemplateEngine.Scriban;
+using Transmitly.Util;
 
 namespace Transmitly
 {
