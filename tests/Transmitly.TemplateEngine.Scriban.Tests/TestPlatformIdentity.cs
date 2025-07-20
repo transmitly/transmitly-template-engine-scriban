@@ -21,10 +21,7 @@ namespace Transmitly.TemplateEngine.Scriban.Tests
 			public string? Id { get; set; }
 			public string? Name { get; set; }
 			public string? Type { get; set; }
-			public IReadOnlyCollection<IIdentityAddress> Addresses { get; set; } = [];
-
-			public IReadOnlyCollection<IChannelPreference>? ChannelPreferences { get; set; }
+			public IReadOnlyCollection<IPlatformIdentityAddress> Addresses { get; set; } = [];
 		}
-
 	}
 }

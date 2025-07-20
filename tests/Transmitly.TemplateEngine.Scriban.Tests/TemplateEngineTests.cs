@@ -14,6 +14,7 @@
 
 using Moq;
 using Transmitly.Template.Configuration;
+using Transmitly.Util;
 
 namespace Transmitly.TemplateEngine.Scriban.Tests
 {
