@@ -5,11 +5,9 @@
 This package is typically used alongside:
 
 - `Transmitly`
-- A Transmitly channel provider such as `Transmitly.ChannelProvider.Smtp`, `Transmitly.ChannelProvider.SendGrid`, or `Transmitly.ChannelProvider.Infobip`
+- a Transmitly channel provider such as `Transmitly.ChannelProvider.Smtp`, `Transmitly.ChannelProvider.SendGrid`, or `Transmitly.ChannelProvider.Infobip`
 
-## Installation
-
-Install the core library, this template engine, and a channel provider:
+## Install
 
 ```shell
 dotnet add package Transmitly
@@ -41,11 +39,7 @@ ICommunicationsClient client = new CommunicationsClientBuilder()
 				"""
 				<p>Hello {{firstName}},</p>
 				{{ if trackingUrl }}
-				<p>
-					Your order has shipped.
-					Track it here:
-					<a href="{{trackingUrl}}">{{trackingNumber}}</a>
-				</p>
+				<p>Your order has shipped. <a href="{{trackingUrl}}">Track package {{trackingNumber}}</a>.</p>
 				{{ else }}
 				<p>Your order has shipped.</p>
 				{{ end }}
@@ -68,17 +62,9 @@ var result = await client.DispatchAsync(
 	});
 ```
 
-## Why Scriban
+## Registration
 
-Use this package when you want Scriban syntax and features directly in your Transmitly pipelines. It is a good fit when:
-
-- your team already uses Scriban elsewhere
-- you want stricter template error handling by default
-- you want the option to parse Liquid templates with Scriban
-
-## Registering The Engine
-
-Use either of these registration styles:
+Use either registration style:
 
 ```csharp
 new CommunicationsClientBuilder()
@@ -94,43 +80,16 @@ new CommunicationsClientBuilder()
 
 `AddScribanTemplateEngine(options => ...)` accepts `ScribanOptions`.
 
-| Option | Default | Description |
-| --- | --- | --- |
-| `UseLiquidTemplates` | `false` | Parse templates using Scriban's Liquid parser instead of native Scriban syntax. |
-| `ThrowIfTemplateError` | `true` | Throw `ScribanTemplateEngineException` when the template has parser errors. |
-| `LexerOptions` | `null` | Optional Scriban lexer configuration. |
-| `ParserOptions` | Scriban default | Optional Scriban parser configuration. |
-| `MemberRenamer` | `null` | Optional member renaming strategy when exposing the content model to Scriban. |
-| `MemberFilterDelegate` | `null` | Optional member filter to restrict what is accessible to templates. |
+Important settings:
 
-Example:
-
-```csharp
-using Transmitly.TemplateEngine.Scriban;
-
-new CommunicationsClientBuilder()
-	.AddScribanTemplateEngine(options =>
-	{
-		options.ThrowIfTemplateError = false;
-		options.UseLiquidTemplates = true;
-	});
-```
-
-## Error Handling
-
-By default, invalid Scriban templates throw `ScribanTemplateEngineException`.
-
-If you prefer fail-soft behavior, set:
-
-```csharp
-options.ThrowIfTemplateError = false;
-```
-
-With that setting, invalid templates return `null`.
+- `UseLiquidTemplates`: parse Liquid-style templates with Scriban.
+- `ThrowIfTemplateError`: controls whether invalid templates throw `ScribanTemplateEngineException` or return `null`.
+- `LexerOptions` and `ParserOptions`: pass through to Scriban.
+- `MemberRenamer` and `MemberFilterDelegate`: control how the content model is exposed to templates.
 
 ## Template Sources
 
-The engine works with the normal Transmitly template registration APIs, including:
+The engine works with the normal Transmitly template registration APIs:
 
 - `AddStringTemplate(...)`
 - `AddEmbeddedResourceTemplate(...)`
@@ -139,6 +98,7 @@ The engine works with the normal Transmitly template registration APIs, includin
 ## Behavior Notes
 
 - Templates render against `context.ContentModel.Model`.
+- By default, invalid templates throw `ScribanTemplateEngineException`.
 - A `null` content model is allowed; missing values render as empty output.
 - The current Transmitly core supports only one template engine registration per `CommunicationsClientBuilder`.
 
@@ -146,7 +106,6 @@ The engine works with the normal Transmitly template registration APIs, includin
 
 - [Transmitly](https://github.com/transmitly/transmitly)
 - [Transmitly.TemplateEngine.Fluid](https://github.com/transmitly/transmitly-template-engine-fluid)
-- [Transmitly.ChannelProvider.Smtp](https://github.com/transmitly/transmitly-channel-provider-smtp)
 
 ---
 _Copyright (c) Code Impressions, LLC. This open-source project is sponsored and maintained by Code Impressions and is licensed under the [Apache License, Version 2.0](http://apache.org/licenses/LICENSE-2.0.html)._
