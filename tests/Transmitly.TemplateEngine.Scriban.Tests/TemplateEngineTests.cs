@@ -78,7 +78,7 @@ namespace Transmitly.TemplateEngine.Scriban.Tests
 			context.Setup(s => s.ContentModel).Returns(model.Object);
 			var engine = new Scriban.ScribanTemplateEngine(new ScribanOptions { });
 
-			await Assert.ThrowsExceptionAsync<ScribanTemplateEngineException>(() => engine.RenderAsync(template.Object, context.Object));
+			await Assert.ThrowsExactlyAsync<ScribanTemplateEngineException>(() => engine.RenderAsync(template.Object, context.Object));
 		}
 
 		[TestMethod]
@@ -99,6 +99,78 @@ namespace Transmitly.TemplateEngine.Scriban.Tests
 			var result = await engine.RenderAsync(template.Object, context.Object);
 
 			Assert.IsNull(result);
+		}
+
+		[TestMethod]
+		public void ShouldApplySecureDefaultParserLimit()
+		{
+			var engine = new Scriban.ScribanTemplateEngine(new ScribanOptions());
+
+			var parserOptions = engine.CreateParserOptions();
+
+			Assert.AreEqual(ScribanOptions.DefaultExpressionDepthLimit, parserOptions.ExpressionDepthLimit);
+		}
+
+		[TestMethod]
+		public void ShouldApplySecureDefaultRenderLimits()
+		{
+			var engine = new Scriban.ScribanTemplateEngine(new ScribanOptions());
+			var renderContext = engine.CreateTemplateContext(model: null);
+
+			try
+			{
+				Assert.AreEqual(ScribanOptions.DefaultObjectRecursionLimit, renderContext.ObjectRecursionLimit);
+				Assert.AreEqual(ScribanOptions.DefaultLimitToString, renderContext.LimitToString);
+			}
+			finally
+			{
+				renderContext.PopGlobal();
+			}
+		}
+
+		[TestMethod]
+		public async Task ShouldThrowWhenExpressionDepthLimitExceeded()
+		{
+			var nestedExpression = new string('(', ScribanOptions.DefaultExpressionDepthLimit + 1) + "1" + new string(')', ScribanOptions.DefaultExpressionDepthLimit + 1);
+			var templateContent = $"{{{{ {nestedExpression} }}}}";
+			var template = new Mock<IContentTemplateRegistration>();
+			template.Setup(s => s.GetContentAsync(It.IsAny<IDispatchCommunicationContext>())).Returns(Task.FromResult<string?>(templateContent));
+			var model = new Mock<IContentModel>();
+#pragma warning disable CS8625 // Cannot convert null literal to non-nullable reference type.
+			model.Setup(s => s.Model).Returns(null);
+#pragma warning restore CS8625 // Cannot convert null literal to non-nullable reference type.
+			var context = new Mock<IDispatchCommunicationContext>();
+			context.Setup(s => s.ContentModel).Returns(model.Object);
+			var engine = new Scriban.ScribanTemplateEngine(new ScribanOptions());
+
+			var exception = await Assert.ThrowsExactlyAsync<ScribanTemplateEngineException>(() => engine.RenderAsync(template.Object, context.Object));
+
+			StringAssert.Contains(exception.Message, "errors");
+		}
+
+		[TestMethod]
+		public async Task ShouldThrowWhenObjectRecursionLimitExceeded()
+		{
+			var recursiveObject = new global::Scriban.Runtime.ScriptObject();
+			recursiveObject["self"] = recursiveObject;
+			var model = new global::Scriban.Runtime.ScriptObject
+			{
+				["a"] = recursiveObject
+			};
+			var engine = new Scriban.ScribanTemplateEngine(new ScribanOptions());
+			var template = global::Scriban.Template.Parse("{{ a }}");
+			var renderContext = engine.CreateTemplateContext(model);
+
+			try
+			{
+				var exception = await Assert.ThrowsExactlyAsync<global::Scriban.Syntax.ScriptRuntimeException>(async () => await template.RenderAsync(renderContext));
+
+				StringAssert.Contains(exception.Message, "deeply nested");
+			}
+			finally
+			{
+				renderContext.PopGlobal();
+			}
 		}
 	}
 }

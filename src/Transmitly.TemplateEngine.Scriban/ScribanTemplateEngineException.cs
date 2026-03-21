@@ -13,11 +13,17 @@
 //  limitations under the License.
 
 using System;
+#if NETFRAMEWORK
 using System.Runtime.Serialization;
+#endif
 
 namespace Transmitly.TemplateEngine.Scriban
 {
+#if NETFRAMEWORK
 	[Serializable]
+	/// <summary>
+	/// Represents an error raised by the Scriban template engine while validating or rendering template content.
+	/// </summary>
 	public sealed class ScribanTemplateEngineException : Exception
 	{
 		public ScribanTemplateEngineException(string message) : base(message)
@@ -25,9 +31,22 @@ namespace Transmitly.TemplateEngine.Scriban
 
 		}
 
-		protected ScribanTemplateEngineException(SerializationInfo info, StreamingContext context) : base(info, context)
+		private ScribanTemplateEngineException(SerializationInfo info, StreamingContext context) : base(info, context)
 		{
 
 		}
+
+		public override void GetObjectData(SerializationInfo info, StreamingContext context)
+		{
+			base.GetObjectData(info, context);
+		}
 	}
+#else
+	/// <summary>
+	/// Represents an error raised by the Scriban template engine while validating or rendering template content.
+	/// </summary>
+	public sealed class ScribanTemplateEngineException(string message) : Exception(message)
+	{
+	}
+#endif
 }

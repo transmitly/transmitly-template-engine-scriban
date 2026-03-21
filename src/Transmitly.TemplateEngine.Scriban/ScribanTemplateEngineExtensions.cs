@@ -19,11 +19,19 @@ using Transmitly.Util;
 
 namespace Transmitly
 {
+	/// <summary>
+	/// Extensions for registering and referencing the Scriban template engine within a Transmitly configuration.
+	/// </summary>
 	public static class ScribanTemplateEngineExtensions
 	{
 		private const string ScribanId = "Scriban";
 
-
+		/// <summary>
+		/// Gets the identifier used to reference the Scriban template engine configurations.
+		/// </summary>
+		/// <param name="templateEngines">The template engine identifier source.</param>
+		/// <param name="providerId">An optional provider-specific suffix used to create a distinct engine identifier.</param>
+		/// <returns>The resolved template engine identifier.</returns>
 		public static string Scriban(this TemplateEngines templateEngines, string? providerId = null)
 		{
 			Guard.AgainstNull(templateEngines);
@@ -31,6 +39,13 @@ namespace Transmitly
 			return templateEngines.GetId(ScribanId, providerId);
 		}
 
+		/// <summary>
+		/// Registers the Scriban template engine using the supplied configuration callback.
+		/// </summary>
+		/// <param name="templateConfiguration">The template configuration builder that will receive the engine registration.</param>
+		/// <param name="options">A callback that configures <see cref="ScribanOptions"/> before registration.</param>
+		/// <param name="templateEngineId">An optional explicit template engine identifier.</param>
+		/// <returns>The parent communications client builder.</returns>
 		public static CommunicationsClientBuilder AddScribanTemplateEngine(this TemplateConfigurationBuilder templateConfiguration, Action<ScribanOptions> options, string? templateEngineId = null)
 		{
 			Guard.AgainstNull(templateConfiguration);
@@ -41,16 +56,33 @@ namespace Transmitly
 			return templateConfiguration.Add(new ScribanTemplateEngine(opts), Id.TemplateEngines.Scriban(templateEngineId));
 		}
 
+		/// <summary>
+		/// Registers the Scriban template engine using the default <see cref="ScribanOptions"/>.
+		/// </summary>
+		/// <param name="templateConfiguration">The template configuration builder that will receive the engine registration.</param>
+		/// <param name="templateEngineId">An optional explicit template engine identifier.</param>
+		/// <returns>The parent communications client builder.</returns>
 		public static CommunicationsClientBuilder AddScribanTemplateEngine(this TemplateConfigurationBuilder templateConfiguration, string? templateEngineId = null)
 		{
 			return AddScribanTemplateEngine(templateConfiguration, (opts) => { }, templateEngineId);
 		}
 
+		/// <summary>
+		/// Registers the Scriban template engine on a communications client using the default <see cref="ScribanOptions"/>.
+		/// </summary>
+		/// <param name="communicationsClientBuilder">The communications client builder to configure.</param>
+		/// <returns>The configured communications client builder.</returns>
 		public static CommunicationsClientBuilder AddScribanTemplateEngine(this CommunicationsClientBuilder communicationsClientBuilder)
 		{
 			return AddScribanTemplateEngine(communicationsClientBuilder.TemplateEngine, (opts) => { });
 		}
 
+		/// <summary>
+		/// Registers the Scriban template engine on a communications client using the supplied configuration callback.
+		/// </summary>
+		/// <param name="communicationsClientBuilder">The communications client builder to configure.</param>
+		/// <param name="options">A callback that configures <see cref="ScribanOptions"/> before registration.</param>
+		/// <returns>The configured communications client builder.</returns>
 		public static CommunicationsClientBuilder AddScribanTemplateEngine(this CommunicationsClientBuilder communicationsClientBuilder, Action<ScribanOptions> options)
 		{
 			return AddScribanTemplateEngine(communicationsClientBuilder.TemplateEngine, options, Id.TemplateEngines.Scriban());

@@ -14,6 +14,7 @@
 
 using System;
 using System.Threading.Tasks;
+using Scriban.Runtime;
 using Transmitly.Template.Configuration;
 using Transmitly.Util;
 using SB = Scriban;
@@ -36,22 +37,55 @@ namespace Transmitly.TemplateEngine.Scriban
 			if (template.HasErrors)
 			{
 				var messages = string.Join(Environment.NewLine, template.Messages);
-				if (options.ThrowIfTemplateError)
+				if (_options.ThrowIfTemplateError)
 				{
 					throw new ScribanTemplateEngineException($"Provided template has errors. Pipeline: '{context.PipelineIntent}'.{Environment.NewLine}{messages}");
 				}
 				System.Diagnostics.Debug.WriteLine($"{nameof(ScribanTemplateEngine)} {string.Join(";", messages)}");
 				return null;
 			}
-			var result = await template.RenderAsync(model, _options.MemberRenamer, _options.MemberFilterDelegate);
-			return result?.ToString();
+
+			var renderContext = CreateTemplateContext(model);
+			try
+			{
+				return await template.RenderAsync(renderContext);
+			}
+			finally
+			{
+				renderContext.PopGlobal();
+			}
+		}
+
+		internal SB.Parsing.ParserOptions CreateParserOptions()
+		{
+			var parserOptions = _options.ParserOptions;
+			parserOptions.ExpressionDepthLimit = _options.ExpressionDepthLimit;
+			return parserOptions;
+		}
+
+		internal SB.TemplateContext CreateTemplateContext(object? model)
+		{
+			var scriptObject = new ScriptObject();
+			if (model != null)
+			{
+				scriptObject.Import(model, renamer: _options.MemberRenamer, filter: _options.MemberFilterDelegate);
+			}
+
+			var renderContext = _options.UseLiquidTemplates ? new SB.LiquidTemplateContext() : new SB.TemplateContext();
+			renderContext.MemberRenamer = _options.MemberRenamer;
+			renderContext.MemberFilter = _options.MemberFilterDelegate;
+			renderContext.ObjectRecursionLimit = _options.ObjectRecursionLimit;
+			renderContext.LimitToString = _options.LimitToString;
+			renderContext.PushGlobal(scriptObject);
+			return renderContext;
 		}
 
 		private SB.Template Parse(string? content)
 		{
+			var parserOptions = CreateParserOptions();
 			if (_options.UseLiquidTemplates)
-				return SB.Template.ParseLiquid(content, parserOptions: _options.ParserOptions, lexerOptions: _options.LexerOptions);
-			return SB.Template.Parse(content, parserOptions: _options.ParserOptions, lexerOptions: _options.LexerOptions);
+				return SB.Template.ParseLiquid(content, parserOptions: parserOptions, lexerOptions: _options.LexerOptions);
+			return SB.Template.Parse(content, parserOptions: parserOptions, lexerOptions: _options.LexerOptions);
 		}
 
 	}
