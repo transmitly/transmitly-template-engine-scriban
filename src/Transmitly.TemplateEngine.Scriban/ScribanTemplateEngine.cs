@@ -58,9 +58,10 @@ namespace Transmitly.TemplateEngine.Scriban
 
 		internal SB.Parsing.ParserOptions CreateParserOptions()
 		{
-			var parserOptions = _options.ParserOptions;
-			parserOptions.ExpressionDepthLimit = _options.ExpressionDepthLimit;
-			return parserOptions;
+			return new SB.Parsing.ParserOptions
+			{
+				ExpressionDepthLimit = _options.ExpressionDepthLimit ?? SB.Parsing.ParserOptions.Default.ExpressionDepthLimit,
+			};
 		}
 
 		internal SB.TemplateContext CreateTemplateContext(object? model)
